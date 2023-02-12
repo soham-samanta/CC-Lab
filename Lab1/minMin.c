@@ -16,17 +16,16 @@ int main(){
     T1 T2 T3
     M1 | 140 | 20  | 60 |
     M2 | 100 | 100 | 70 |
-
     */
 
-    int minMin[nM][nT];
+    int arr[nM][nT];
     int tmp[nM][nT];
     int makespan = 0;
     printf("\n*** Fill Data ***\n");
     for (int i = 0; i < nM; i++)
         for (int j = 0; j < nT; j++){
-            scanf("%d", &minMin[i][j]);
-            tmp[i][j] = minMin[i][j];
+            scanf("%d", &arr[i][j]);
+            tmp[i][j] = arr[i][j];
         }
 
     // visualise original data
@@ -34,7 +33,7 @@ int main(){
 
     for (int i = 0; i < nM; i++){
         for (int j = 0; j < nT; j++)
-            printf("%d ", minMin[i][j]);
+            printf("%d ", arr[i][j]);
         printf("\n");
     }
 
@@ -50,14 +49,20 @@ int main(){
             int minimum = INT_MAX;
             int pos = -1;
             for (int i = 0; i < nM; i++){
-                if (minMin[i][j] < minimum){
-                    minimum = minMin[i][j];
+                if (arr[i][j] < minimum){
+                    minimum = arr[i][j];
                     pos = i;
+                    // printf("%d ",minimum);
                 }
             }
             time[j] = minimum;
-            machine[j] = pos;
+            machine[j] = pos; // vm1 or 2
+            
         }
+
+        // for(int i=0;i<nT;i++){
+            
+        // }
 
         // Now we find task with minimum time
 
@@ -68,22 +73,28 @@ int main(){
             if (time[j] < minimum){
                 minimum = time[j];
                 pos = j;
+
+                
             }
+            
         }
 
         resultTask[++ptr] = pos;
         resultMachine[ptr] = machine[pos];
         resultTime[ptr] = tmp[machine[pos]][pos];
+        // printf("%d",  resultTime[0]);
+        // printf("%d",  resultTime[1]);
+        // printf("%d",  resultTime[2]);
         if (minimum > makespan)
             makespan = minimum;
         // resetting states
 
-        for (int i = 0; i < nM; i++){
+        for (int i = 0; i < nM; i++){ // traversing arr 
             for (int j = 0; j < nT; j++){
                 if (j == resultTask[ptr])
-                    minMin[i][j] = INT_MAX;
-                else if (i == resultMachine[ptr] && minMin[i][j] != INT_MAX)
-                    minMin[i][j] += minimum;
+                    arr[i][j] = INT_MAX;
+                else if (i == resultMachine[ptr] && arr[i][j] != INT_MAX)
+                    arr[i][j] += minimum;
                 else
                     continue;
             }
@@ -91,10 +102,10 @@ int main(){
     }
 
     // printing answer
-    printf("\nScheduled Task are :\n");
-    for (int i = 0; i < nT; i++){
-        printf("\nTask %d Runs on Machine %d with Time %d units\n", resultTask[i] + 1, resultMachine[i] + 1, resultTime[i]);
-    }
+    // printf("\nScheduled Task are :\n");
+    // for (int i = 0; i < nT; i++){
+    //     printf("\nTask %d Runs on Machine %d with Time %d units\n", resultTask[i] + 1, resultMachine[i] + 1, resultTime[i]);
+    // }
 
     printf("\nMakespan : %d units\n", makespan);
     return 0;
